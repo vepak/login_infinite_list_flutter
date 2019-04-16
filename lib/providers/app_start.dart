@@ -72,6 +72,7 @@ class _AppStartState extends State<AppStart> {
               if (state is AuthenticationDemo) {
                 return PropertiesPage();
               }
+              return AuthenticationLandingPage();
             }
         ))
     ));
