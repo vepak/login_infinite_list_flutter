@@ -49,8 +49,6 @@ class _AppStartState extends State<AppStart> {
           if (state is AuthenticationLogin) {
             Navigator.push(context, MaterialPageRoute(builder: (context) =>
                 LoginPage(userRepository: _userRepository)));
-            return new Container(width: 0.0, height: 0.0);
-
           }
         },
         child:BlocBuilder<AuthenticationEvent, AuthenticationState>(
