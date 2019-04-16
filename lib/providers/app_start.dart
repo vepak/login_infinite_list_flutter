@@ -36,38 +36,46 @@ class _AppStartState extends State<AppStart> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(
-      bloc: _authenticationBloc,
-      child: MaterialApp(
-        home: BlocBuilder<AuthenticationEvent, AuthenticationState>(
-          bloc: _authenticationBloc,
-          builder: (BuildContext context, AuthenticationState state) {
-            if (state is AuthenticationUninitialized) {
-              return SplashPage();
+        bloc: _authenticationBloc,
+        child: MaterialApp(
+        home:BlocListener(
+        bloc: _authenticationBloc,
+        listener: (BuildContext context, AuthenticationState state) {
+          if (state is AuthenticationLogin) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                LoginPage(userRepository: _userRepository)));
+            return new Container(width: 0.0, height: 0.0);
+
+          }
+        },
+        child:BlocBuilder<AuthenticationEvent, AuthenticationState>(
+            bloc: _authenticationBloc,
+            builder: (BuildContext context, AuthenticationState state) {
+              if (state is AuthenticationUninitialized) {
+                return SplashPage();
+              }
+              if (state is AuthenticationAuthenticated) {
+                return PropertiesPage();
+              }
+              if (state is AuthenticationUnauthenticated) {
+                return AuthenticationLandingPage();
+              }
+              if (state is AuthenticationLoading) {
+                return BottomLoader();
+              }
+              if (state is AuthenticationSignup) {
+                return AuthenticationLandingPage();
+              }
+              if (state is AuthenticationDemo) {
+                return PropertiesPage();
+              }
             }
-            if (state is AuthenticationAuthenticated) {
-              return PropertiesPage();
-            }
-            if (state is AuthenticationUnauthenticated) {
-              return AuthenticationLandingPage();
-            }
-            if (state is AuthenticationLoading) {
-              return BottomLoader();
-            }
-            if(state is AuthenticationLogin) {
-              return LoginPage(userRepository: _userRepository);
-            }
-            if(state is AuthenticationSignup) {
-              return AuthenticationLandingPage();
-            }
-            if(state is AuthenticationDemo) {
-              return PropertiesPage();
-            }
-          },
-        ),
-      ),
-    );
+        ))
+    ));
   }
 }
